@@ -1,0 +1,1806 @@
+{
+	"swagger": "2.0",
+	"info": {
+		"description": "dokumentasi API Kavi Kasir",
+		"title": "KAVI Kasir API",
+		"contact": {},
+		"version": "1.0"
+	},
+	"host": "localhost:8080",
+	"basePath": "/",
+	"paths": {
+		"/auth/login": {
+			"post": {
+				"description": "Login",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["auth"],
+				"summary": "Login",
+				"parameters": [
+					{
+						"description": "Field login",
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/authModel.LoginRequest"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/authModel.ResponseToken"
+						}
+					}
+				}
+			}
+		},
+		"/auth/register": {
+			"post": {
+				"description": "Membuat akun",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["auth"],
+				"summary": "Membuat akun",
+				"parameters": [
+					{
+						"description": "Field order",
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/userModel.UserCreate"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/model.ResponseMessage"
+						}
+					}
+				}
+			}
+		},
+		"/bank": {
+			"post": {
+				"description": "Tambah data bank",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["bank"],
+				"summary": "Tambah data bank",
+				"parameters": [
+					{
+						"description": "Field produk",
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/bankModel.Bank"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/bankModel.Bank"
+						}
+					}
+				}
+			}
+		},
+		"/bank/{bank_id}": {
+			"put": {
+				"description": "Mengubah data bank",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["bank"],
+				"summary": "Ubah bank",
+				"parameters": [
+					{
+						"type": "string",
+						"description": "bank_id",
+						"name": "bank_id",
+						"in": "path",
+						"required": true
+					},
+					{
+						"description": "Field bank",
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/bankModel.BankUpdate"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/model.ResponseMessage"
+						}
+					}
+				}
+			},
+			"delete": {
+				"description": "Hapus data bank user",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["bank"],
+				"summary": "Hapus data bank user",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/model.ResponseMessage"
+						}
+					}
+				}
+			}
+		},
+		"/bank/{user_id}": {
+			"get": {
+				"description": "Ambil data bank berdasarkan user id",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["bank"],
+				"summary": "Ambil data bank berdasarkan user id",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/bankModel.BankShow"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/katalog": {
+			"get": {
+				"description": "Menampilkan data katalog",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["katalog"],
+				"summary": "Menampilkan data katalog",
+				"parameters": [
+					{
+						"type": "integer",
+						"description": "page",
+						"name": "page",
+						"in": "path"
+					},
+					{
+						"type": "integer",
+						"description": "size",
+						"name": "size",
+						"in": "path"
+					},
+					{
+						"type": "string",
+						"description": "keyword",
+						"name": "keyword",
+						"in": "path"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/model.KatalogTest"
+						}
+					}
+				}
+			},
+			"post": {
+				"description": "Menambahkan katalog",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["katalog"],
+				"summary": "Menambahkan katalog",
+				"parameters": [
+					{
+						"description": "Field order",
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/katalogModel.KatalogCreate"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/model.ResponseMessage"
+						}
+					}
+				}
+			}
+		},
+		"/katalog/{katalog_id}": {
+			"get": {
+				"description": "ambil data katalog",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["katalog"],
+				"summary": "Ambil katalog berdasarkan id",
+				"parameters": [
+					{
+						"type": "string",
+						"description": "katalog_id",
+						"name": "katalog_id",
+						"in": "path",
+						"required": true
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/katalogModel.KatalogShow"
+						}
+					}
+				}
+			},
+			"delete": {
+				"description": "Menghapus data katalog",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["katalog"],
+				"summary": "Hapus katalog",
+				"parameters": [
+					{
+						"type": "string",
+						"description": "katalog_id",
+						"name": "katalog_id",
+						"in": "path",
+						"required": true
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/model.ResponseMessage"
+						}
+					}
+				}
+			},
+			"patch": {
+				"description": "Mengubah harga katalog",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["katalog"],
+				"summary": "Ubah harga katalog",
+				"parameters": [
+					{
+						"type": "string",
+						"description": "katalog_id",
+						"name": "katalog_id",
+						"in": "path",
+						"required": true
+					},
+					{
+						"description": "Field katalog",
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/katalogModel.UpdateKatalog"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/katalogModel.KatalogShow"
+						}
+					}
+				}
+			}
+		},
+		"/kategori": {
+			"get": {
+				"description": "Menampilkan kategori",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["kategori"],
+				"summary": "Menampilkan kategori",
+				"parameters": [
+					{
+						"type": "integer",
+						"description": "page",
+						"name": "page",
+						"in": "path"
+					},
+					{
+						"type": "integer",
+						"description": "size",
+						"name": "size",
+						"in": "path"
+					},
+					{
+						"type": "string",
+						"description": "keyword",
+						"name": "keyword",
+						"in": "path"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/model.PaginationKategoriTest"
+						}
+					}
+				}
+			},
+			"post": {
+				"description": "Membuat kategori",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["kategori"],
+				"summary": "Buat kategori",
+				"parameters": [
+					{
+						"description": "Field produk",
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/kategoriModel.KategoriCreate"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/model.ResponseMessage"
+						}
+					}
+				}
+			}
+		},
+		"/kategori/{kategori_id}": {
+			"delete": {
+				"description": "Menghapus data kategori",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["kategori"],
+				"summary": "Hapus kategori",
+				"parameters": [
+					{
+						"type": "string",
+						"description": "kategori_id",
+						"name": "kategori_id",
+						"in": "path",
+						"required": true
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/model.ResponseMessage"
+						}
+					}
+				}
+			}
+		},
+		"/kategori/{ref_kategori_id}": {
+			"put": {
+				"description": "Ubah data kategori",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["kategori"],
+				"summary": "Ubah kategori",
+				"parameters": [
+					{
+						"type": "string",
+						"description": "kategori_id",
+						"name": "kategori_id",
+						"in": "path",
+						"required": true
+					},
+					{
+						"description": "Field kategori",
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/kategoriModel.KategoriCreate"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/model.ResponseMessage"
+						}
+					}
+				}
+			}
+		},
+		"/order": {
+			"get": {
+				"description": "Menampilkan order list",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["order"],
+				"summary": "Menampilkan order list",
+				"parameters": [
+					{
+						"type": "integer",
+						"description": "page",
+						"name": "page",
+						"in": "path"
+					},
+					{
+						"type": "integer",
+						"description": "size",
+						"name": "size",
+						"in": "path"
+					},
+					{
+						"type": "string",
+						"description": "keyword",
+						"name": "keyword",
+						"in": "path"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/orderModel.Order"
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"description": "Menambahkan order",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["order"],
+				"summary": "Menambahkan order",
+				"parameters": [
+					{
+						"description": "Field order",
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/orderModel.OrderAdd"
+							}
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/model.ResponseMessage"
+						}
+					}
+				}
+			}
+		},
+		"/order/{order_id}": {
+			"get": {
+				"description": "Order",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["order"],
+				"summary": "Mendapatkan list order berdasarkan id",
+				"parameters": [
+					{
+						"type": "string",
+						"description": "order_id",
+						"name": "order_id",
+						"in": "path",
+						"required": true
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/orderModel.OrderListShow"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"description": "hapus order",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["order"],
+				"summary": "Hapus order",
+				"parameters": [
+					{
+						"type": "string",
+						"description": "order_id",
+						"name": "order_id",
+						"in": "path",
+						"required": true
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/produkModel.Produk"
+						}
+					}
+				}
+			},
+			"patch": {
+				"description": "update status order",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["order"],
+				"summary": "Update status order",
+				"parameters": [
+					{
+						"type": "string",
+						"description": "order_id",
+						"name": "order_id",
+						"in": "path",
+						"required": true
+					},
+					{
+						"description": "Field order",
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/orderModel.OrderSetStatus"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/orderModel.OrderItemResult"
+						}
+					}
+				}
+			}
+		},
+		"/produk": {
+			"post": {
+				"description": "Membuat data produk",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["produk"],
+				"summary": "Buat produk",
+				"parameters": [
+					{
+						"description": "Field produk",
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/produkModel.ProdukTest"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/model.ResponseMessage"
+						}
+					}
+				}
+			}
+		},
+		"/produk/{produk_id}": {
+			"get": {
+				"description": "ambil data produk",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["produk"],
+				"summary": "Ambil produk berdasarkan id",
+				"parameters": [
+					{
+						"type": "string",
+						"description": "produk_id",
+						"name": "produk_id",
+						"in": "path",
+						"required": true
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/produkModel.Produk"
+						}
+					}
+				}
+			},
+			"put": {
+				"description": "Mengubah data produk",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["produk"],
+				"summary": "Ubah produk",
+				"parameters": [
+					{
+						"type": "string",
+						"description": "produk_id",
+						"name": "produk_id",
+						"in": "path",
+						"required": true
+					},
+					{
+						"description": "Field produk",
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/produkModel.ProdukUpdate"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/model.ResponseMessage"
+						}
+					}
+				}
+			},
+			"delete": {
+				"description": "Menghapus data produk",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["produk"],
+				"summary": "Hapus produk",
+				"parameters": [
+					{
+						"type": "string",
+						"description": "produk_id",
+						"name": "produk_id",
+						"in": "path",
+						"required": true
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/model.ResponseMessage"
+						}
+					}
+				}
+			}
+		},
+		"/produk/{user_id}": {
+			"patch": {
+				"description": "Update data user",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["user"],
+				"summary": "Update data user",
+				"parameters": [
+					{
+						"type": "string",
+						"description": "user_id",
+						"name": "user_id",
+						"in": "path",
+						"required": true
+					},
+					{
+						"description": "Field user",
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/userModel.UserPatch"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/userModel.UserShow"
+						}
+					}
+				}
+			}
+		},
+		"/ref-kategori": {
+			"get": {
+				"description": "Menampilkan data referensi kategori",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["referensi kategori"],
+				"summary": "Menampilkan data referensi kategori",
+				"parameters": [
+					{
+						"type": "integer",
+						"description": "page",
+						"name": "page",
+						"in": "path"
+					},
+					{
+						"type": "integer",
+						"description": "size",
+						"name": "size",
+						"in": "path"
+					},
+					{
+						"type": "string",
+						"description": "keyword",
+						"name": "keyword",
+						"in": "path"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/model.PaginationRefKategoriTest"
+						}
+					}
+				}
+			},
+			"post": {
+				"description": "Membuat referensi kategori",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["referensi kategori"],
+				"summary": "Buat referensi kategori",
+				"parameters": [
+					{
+						"description": "Field produk",
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/kategoriModel.RefKategoriCreate"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/model.ResponseMessage"
+						}
+					}
+				}
+			}
+		},
+		"/ref-kategori/{ref_kategori_id}": {
+			"put": {
+				"description": "Ubah data referensi kategori",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["referensi kategori"],
+				"summary": "Ubah referensi kategori",
+				"parameters": [
+					{
+						"type": "string",
+						"description": "ref_kategori_id",
+						"name": "ref_kategori_id",
+						"in": "path",
+						"required": true
+					},
+					{
+						"description": "Field kategori",
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/kategoriModel.RefKategoriCreate"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/model.ResponseMessage"
+						}
+					}
+				}
+			},
+			"delete": {
+				"description": "Menghapus data referensi kategori",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["referensi kategori"],
+				"summary": "Hapus referensi kategori",
+				"parameters": [
+					{
+						"type": "string",
+						"description": "ref_kategori_id",
+						"name": "ref_kategori_id",
+						"in": "path",
+						"required": true
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/model.ResponseMessage"
+						}
+					}
+				}
+			}
+		},
+		"/refresh/reference": {
+			"get": {
+				"description": "Menampilkan semua data referensi kategori dan kategori",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["refresh reference"],
+				"summary": "Menampilkan semua data referensi kategori dan kategori",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/kategoriModel.Reference"
+						}
+					}
+				}
+			}
+		},
+		"/rekening": {
+			"get": {
+				"description": "Ambil data rekening",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["rekening"],
+				"summary": "Ambil data rekening",
+				"parameters": [
+					{
+						"type": "integer",
+						"description": "page",
+						"name": "page",
+						"in": "path"
+					},
+					{
+						"type": "integer",
+						"description": "size",
+						"name": "size",
+						"in": "path"
+					},
+					{
+						"type": "string",
+						"description": "keyword",
+						"name": "keyword",
+						"in": "path"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/model.PaginationResponseTest"
+						}
+					}
+				}
+			},
+			"post": {
+				"description": "Tambah data rekening",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["rekening"],
+				"summary": "Tambah data rekening",
+				"parameters": [
+					{
+						"description": "Field produk",
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/rekeningModel.Rekening"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/rekeningModel.Rekening"
+						}
+					}
+				}
+			}
+		},
+		"/rekening/{rekening_id}": {
+			"delete": {
+				"description": "Hapus data rekening user",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["rekening"],
+				"summary": "Hapus data rekening user",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/model.ResponseMessage"
+						}
+					}
+				}
+			},
+			"patch": {
+				"description": "Tambah/kurangi saldo",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["rekening"],
+				"summary": "Tambah/kurangi saldo",
+				"parameters": [
+					{
+						"description": "Field rekening",
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/rekeningModel.RekeningSaldo"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/model.ResponseMessage"
+						}
+					}
+				}
+			}
+		},
+		"/rekening/{user_id}": {
+			"get": {
+				"description": "Ambil data rekening berdasarkan user id",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["rekening"],
+				"summary": "Ambil data rekening berdasarkan user id",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/rekeningModel.RekeningShow"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/stok/{produk_id}": {
+			"patch": {
+				"description": "Mengubah atau menambah stok produk",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["stok"],
+				"summary": "Tambah atau rubah stok produk",
+				"parameters": [
+					{
+						"type": "string",
+						"description": "produk_id",
+						"name": "produk_id",
+						"in": "path",
+						"required": true
+					},
+					{
+						"description": "Field produk",
+						"name": "body",
+						"in": "body",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/stokModel.StokAdd"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/model.ResponseMessage"
+						}
+					}
+				}
+			}
+		},
+		"/users": {
+			"get": {
+				"description": "Ambil semua data user",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["user"],
+				"summary": "Ambil semua data user",
+				"parameters": [
+					{
+						"type": "integer",
+						"description": "page",
+						"name": "page",
+						"in": "path"
+					},
+					{
+						"type": "integer",
+						"description": "size",
+						"name": "size",
+						"in": "path"
+					},
+					{
+						"type": "string",
+						"description": "keyword",
+						"name": "keyword",
+						"in": "path"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/model.PaginationResponseTest"
+						}
+					}
+				}
+			}
+		},
+		"/users/{user_id}": {
+			"get": {
+				"description": "Menampilkan detail user",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["user"],
+				"summary": "Menampilkan detail user",
+				"parameters": [
+					{
+						"type": "string",
+						"description": "user_id",
+						"name": "user_id",
+						"in": "path",
+						"required": true
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/userModel.UserShow"
+						}
+					}
+				}
+			},
+			"delete": {
+				"description": "Menghapus user",
+				"consumes": ["application/json"],
+				"produces": ["application/json"],
+				"tags": ["user"],
+				"summary": "Menghapus data user",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/model.ResponseMessage"
+						}
+					}
+				}
+			}
+		}
+	},
+	"definitions": {
+		"authModel.LoginRequest": {
+			"type": "object",
+			"properties": {
+				"password": {
+					"type": "string"
+				},
+				"username": {
+					"type": "string"
+				}
+			}
+		},
+		"authModel.ResponseToken": {
+			"type": "object",
+			"properties": {
+				"access_token": {
+					"type": "string"
+				},
+				"refresh_token": {
+					"type": "string"
+				}
+			}
+		},
+		"bankModel.Bank": {
+			"type": "object",
+			"properties": {
+				"id": {
+					"type": "string"
+				},
+				"kode_bank": {
+					"type": "string"
+				},
+				"nama": {
+					"type": "string"
+				}
+			}
+		},
+		"bankModel.BankShow": {
+			"type": "object",
+			"properties": {
+				"id": {
+					"type": "string"
+				},
+				"kode_bank": {
+					"type": "string"
+				},
+				"nama": {
+					"type": "string"
+				}
+			}
+		},
+		"bankModel.BankUpdate": {
+			"type": "object",
+			"properties": {
+				"kode_bank": {
+					"type": "string"
+				},
+				"nama": {
+					"type": "string"
+				}
+			}
+		},
+		"katalogModel.KatalogCreate": {
+			"type": "object",
+			"properties": {
+				"harga": {
+					"type": "integer"
+				},
+				"produk_id": {
+					"type": "string"
+				},
+				"user_id": {
+					"type": "string"
+				}
+			}
+		},
+		"katalogModel.KatalogShow": {
+			"type": "object",
+			"properties": {
+				"harga_katalog": {
+					"type": "integer"
+				},
+				"id": {
+					"type": "string"
+				},
+				"produk": {
+					"$ref": "#/definitions/produkModel.ProdukShow"
+				}
+			}
+		},
+		"katalogModel.UpdateKatalog": {
+			"type": "object",
+			"properties": {
+				"harga": {
+					"type": "integer"
+				}
+			}
+		},
+		"kategoriModel.Kategori": {
+			"type": "object",
+			"properties": {
+				"deskripsi": {
+					"type": "string"
+				},
+				"id": {
+					"type": "string"
+				},
+				"nama": {
+					"type": "string"
+				},
+				"ref_kategori": {
+					"$ref": "#/definitions/kategoriModel.RefKategori"
+				}
+			}
+		},
+		"kategoriModel.KategoriCreate": {
+			"type": "object",
+			"properties": {
+				"deskripsi": {
+					"type": "string"
+				},
+				"nama": {
+					"type": "string"
+				},
+				"ref_kategori_id": {
+					"type": "string"
+				}
+			}
+		},
+		"kategoriModel.KategoriReference": {
+			"type": "object",
+			"properties": {
+				"deskripsi": {
+					"type": "string"
+				},
+				"id": {
+					"type": "string"
+				},
+				"nama": {
+					"type": "string"
+				},
+				"ref_kategori_id": {
+					"type": "string"
+				}
+			}
+		},
+		"kategoriModel.KategoriShow": {
+			"type": "object",
+			"properties": {
+				"deskripsi": {
+					"type": "string"
+				},
+				"id": {
+					"type": "string"
+				},
+				"nama": {
+					"type": "string"
+				},
+				"ref_kategori": {
+					"$ref": "#/definitions/kategoriModel.RefKategoriShow"
+				}
+			}
+		},
+		"kategoriModel.RefKategori": {
+			"type": "object",
+			"properties": {
+				"id": {
+					"type": "string"
+				},
+				"nama": {
+					"type": "string"
+				}
+			}
+		},
+		"kategoriModel.RefKategoriCreate": {
+			"type": "object",
+			"properties": {
+				"nama": {
+					"type": "string"
+				}
+			}
+		},
+		"kategoriModel.RefKategoriShow": {
+			"type": "object",
+			"properties": {
+				"id": {
+					"type": "string"
+				},
+				"nama": {
+					"type": "string"
+				}
+			}
+		},
+		"kategoriModel.Reference": {
+			"type": "object",
+			"properties": {
+				"id": {
+					"type": "string"
+				},
+				"nama": {
+					"type": "string"
+				},
+				"values": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/kategoriModel.KategoriReference"
+					}
+				}
+			}
+		},
+		"model.KatalogTest": {
+			"type": "object",
+			"properties": {
+				"meta": {
+					"$ref": "#/definitions/model.PaginationMeta"
+				},
+				"result": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/katalogModel.KatalogShow"
+					}
+				}
+			}
+		},
+		"model.PaginationKategoriTest": {
+			"type": "object",
+			"properties": {
+				"meta": {
+					"$ref": "#/definitions/model.PaginationMeta"
+				},
+				"result": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/kategoriModel.KategoriShow"
+					}
+				}
+			}
+		},
+		"model.PaginationMeta": {
+			"type": "object",
+			"properties": {
+				"next": {
+					"type": "string"
+				},
+				"page": {
+					"type": "integer"
+				},
+				"previous": {
+					"type": "string"
+				},
+				"reference": {
+					"$ref": "#/definitions/model.ReferenceResult"
+				},
+				"size": {
+					"type": "integer"
+				},
+				"total_data": {
+					"type": "integer"
+				}
+			}
+		},
+		"model.PaginationRefKategoriTest": {
+			"type": "object",
+			"properties": {
+				"meta": {
+					"$ref": "#/definitions/model.PaginationMeta"
+				},
+				"result": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/kategoriModel.RefKategoriShow"
+					}
+				}
+			}
+		},
+		"model.PaginationResponseTest": {
+			"type": "object",
+			"properties": {
+				"meta": {
+					"$ref": "#/definitions/model.PaginationMeta"
+				},
+				"result": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/produkModel.Produk"
+					}
+				}
+			}
+		},
+		"model.ReferenceResult": {
+			"type": "object",
+			"properties": {
+				"data": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/kategoriModel.Reference"
+					}
+				},
+				"last": {
+					"type": "string"
+				}
+			}
+		},
+		"model.ResponseMessage": {
+			"type": "object",
+			"properties": {
+				"message": {
+					"type": "string"
+				},
+				"reference": {
+					"$ref": "#/definitions/model.ReferenceResult"
+				},
+				"status": {
+					"type": "integer"
+				},
+				"success": {
+					"type": "boolean"
+				}
+			}
+		},
+		"orderModel.Order": {
+			"type": "object",
+			"properties": {
+				"id": {
+					"type": "string"
+				},
+				"invoice": {
+					"type": "string"
+				},
+				"nama_customer": {
+					"type": "string"
+				},
+				"status": {
+					"$ref": "#/definitions/orderModel.status"
+				},
+				"total": {
+					"type": "integer"
+				},
+				"user": {
+					"$ref": "#/definitions/userModel.User"
+				},
+				"user_id": {
+					"type": "string"
+				},
+				"waktu": {
+					"type": "string"
+				}
+			}
+		},
+		"orderModel.OrderAdd": {
+			"type": "object",
+			"properties": {
+				"jumlah": {
+					"type": "integer"
+				},
+				"katalog_id": {
+					"type": "string"
+				},
+				"subtotal": {
+					"type": "integer"
+				}
+			}
+		},
+		"orderModel.OrderItemResult": {
+			"type": "object",
+			"properties": {
+				"created_at": {
+					"type": "string"
+				},
+				"id": {
+					"type": "string"
+				},
+				"invoice": {
+					"type": "string"
+				},
+				"nama_customer": {
+					"type": "string"
+				},
+				"status": {
+					"type": "string"
+				},
+				"total": {
+					"type": "integer"
+				}
+			}
+		},
+		"orderModel.OrderListShow": {
+			"type": "object",
+			"properties": {
+				"id": {
+					"type": "string"
+				},
+				"jumlah": {
+					"type": "integer"
+				},
+				"order_id": {
+					"type": "string"
+				},
+				"produk": {
+					"$ref": "#/definitions/produkModel.ProdukShow"
+				},
+				"total_harga": {
+					"type": "integer"
+				}
+			}
+		},
+		"orderModel.OrderSetStatus": {
+			"type": "object",
+			"properties": {
+				"status": {
+					"type": "string"
+				}
+			}
+		},
+		"orderModel.status": {
+			"type": "string",
+			"enum": ["batal", "selesai", "proses", "belum bayar", "sudah bayar"],
+			"x-enum-varnames": ["batal", "selesai", "proses", "belum", "sudah"]
+		},
+		"produkModel.Produk": {
+			"type": "object",
+			"properties": {
+				"detail": {
+					"type": "string"
+				},
+				"foto": {
+					"type": "string"
+				},
+				"harga": {
+					"type": "integer"
+				},
+				"id": {
+					"type": "string"
+				},
+				"kategori": {
+					"$ref": "#/definitions/kategoriModel.Kategori"
+				},
+				"kategori_id": {
+					"type": "string"
+				},
+				"nama": {
+					"type": "string"
+				}
+			}
+		},
+		"produkModel.ProdukShow": {
+			"type": "object",
+			"properties": {
+				"detail": {
+					"type": "string"
+				},
+				"foto": {
+					"type": "string"
+				},
+				"harga": {
+					"type": "integer"
+				},
+				"id": {
+					"type": "string"
+				},
+				"kategori": {
+					"$ref": "#/definitions/kategoriModel.KategoriShow"
+				},
+				"nama": {
+					"type": "string"
+				}
+			}
+		},
+		"produkModel.ProdukTest": {
+			"type": "object",
+			"properties": {
+				"detail": {
+					"type": "string"
+				},
+				"foto": {
+					"type": "string"
+				},
+				"harga": {
+					"type": "integer"
+				},
+				"kategori_id": {
+					"type": "string"
+				},
+				"nama": {
+					"type": "string"
+				}
+			}
+		},
+		"produkModel.ProdukUpdate": {
+			"type": "object",
+			"properties": {
+				"detail": {
+					"type": "string"
+				},
+				"foto": {
+					"type": "string"
+				},
+				"harga": {
+					"type": "integer"
+				},
+				"kategori_id": {
+					"type": "string"
+				},
+				"nama": {
+					"type": "string"
+				}
+			}
+		},
+		"rekeningModel.Rekening": {
+			"type": "object",
+			"properties": {
+				"bank": {
+					"$ref": "#/definitions/bankModel.Bank"
+				},
+				"bank_id": {
+					"type": "string"
+				},
+				"id": {
+					"type": "string"
+				},
+				"nama": {
+					"type": "string"
+				},
+				"nomor_rekening": {
+					"type": "string"
+				},
+				"saldo": {
+					"type": "integer"
+				},
+				"user": {
+					"$ref": "#/definitions/userModel.User"
+				},
+				"user_id": {
+					"type": "string"
+				}
+			}
+		},
+		"rekeningModel.RekeningSaldo": {
+			"type": "object",
+			"properties": {
+				"saldo": {
+					"type": "integer"
+				},
+				"type": {
+					"type": "string"
+				}
+			}
+		},
+		"rekeningModel.RekeningShow": {
+			"type": "object",
+			"properties": {
+				"bank": {
+					"$ref": "#/definitions/bankModel.BankShow"
+				},
+				"id": {
+					"type": "string"
+				},
+				"nama": {
+					"type": "string"
+				},
+				"nomor_rekening": {
+					"type": "string"
+				},
+				"saldo": {
+					"type": "integer"
+				}
+			}
+		},
+		"stokModel.StokAdd": {
+			"type": "object",
+			"properties": {
+				"stok": {
+					"type": "integer"
+				},
+				"tipe": {
+					"type": "string"
+				}
+			}
+		},
+		"userModel.User": {
+			"type": "object",
+			"properties": {
+				"email": {
+					"type": "string"
+				},
+				"foto": {
+					"type": "string"
+				},
+				"id": {
+					"type": "string"
+				},
+				"kategori": {
+					"$ref": "#/definitions/kategoriModel.Kategori"
+				},
+				"nama": {
+					"type": "string"
+				},
+				"no_telp": {
+					"type": "string"
+				},
+				"password": {
+					"type": "string"
+				},
+				"role": {
+					"type": "string"
+				},
+				"username": {
+					"type": "string"
+				}
+			}
+		},
+		"userModel.UserCreate": {
+			"type": "object",
+			"properties": {
+				"email": {
+					"type": "string"
+				},
+				"foto": {
+					"type": "string"
+				},
+				"nama": {
+					"type": "string"
+				},
+				"no_telp": {
+					"type": "string"
+				},
+				"password": {
+					"type": "string"
+				},
+				"role": {
+					"type": "string"
+				},
+				"username": {
+					"type": "string"
+				}
+			}
+		},
+		"userModel.UserPatch": {
+			"type": "object",
+			"properties": {
+				"email": {
+					"type": "string"
+				},
+				"foto": {
+					"type": "string"
+				},
+				"nama": {
+					"type": "string"
+				},
+				"no_telp": {
+					"type": "string"
+				},
+				"password": {
+					"type": "string"
+				},
+				"role": {
+					"type": "string"
+				},
+				"username": {
+					"type": "string"
+				}
+			}
+		},
+		"userModel.UserShow": {
+			"type": "object",
+			"properties": {
+				"email": {
+					"type": "string"
+				},
+				"foto": {
+					"type": "string"
+				},
+				"id": {
+					"type": "string"
+				},
+				"nama": {
+					"type": "string"
+				},
+				"no_telp": {
+					"type": "string"
+				},
+				"role": {
+					"type": "string"
+				},
+				"username": {
+					"type": "string"
+				}
+			}
+		}
+	}
+}

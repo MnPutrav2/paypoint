@@ -1,0 +1,104 @@
+# ============================================================
+# .github/workflows/deploy.yml
+# Auto deploy Flutter PWA ke CyberPanel + OpenLiteSpeed
+# Trigger: setiap push ke branch main
+# ============================================================
+
+name: Deploy Kasir PWA
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "mobile/**" # hanya trigger jika ada perubahan di folder Flutter
+      - ".github/workflows/deploy.yml"
+
+jobs:
+  deploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. Checkout repo ─────────────────────────────────────
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ── 2. Setup Flutter ─────────────────────────────────────
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "stable"
+          channel: "stable"
+          cache: true # cache Flutter SDK antar run → lebih cepat
+
+      # ── 3. Install dependencies ───────────────────────────────
+      - name: Flutter pub get
+        working-directory: mobile
+        run: flutter pub get
+
+      # ── 4. Build Flutter web ──────────────────────────────────
+      - name: Build Flutter Web
+        working-directory: mobile
+        run: flutter build web --release --base-href "/"
+
+      # ── 5. Buat .htaccess untuk OpenLiteSpeed ─────────────────
+      - name: Create .htaccess
+        run: |
+          cat > mobile/build/web/.htaccess << 'HTACCESS'
+          Options -MultiViews
+          RewriteEngine On
+          RewriteBase /
+          RewriteCond %{REQUEST_FILENAME} !-f
+          RewriteCond %{REQUEST_FILENAME} !-d
+          RewriteRule ^ index.html [L]
+
+          <FilesMatch "(flutter_service_worker\.js|manifest\.json)$">
+              Header set Cache-Control "no-cache, no-store, must-revalidate"
+          </FilesMatch>
+          HTACCESS
+
+      # ── 6. Deploy via SSH ke CyberPanel ──────────────────────
+      - name: Deploy ke Server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            # Bersihkan webroot lama
+            rm -rf /home/${{ secrets.DOMAIN }}/public_html/*
+
+      - name: Upload build ke Server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          source: "mobile/build/web/*"
+          target: "/home/${{ secrets.DOMAIN }}/public_html"
+          strip_components: 3 # hapus prefix mobile/build/web/
+
+      # ── 7. Fix permissions OpenLiteSpeed ─────────────────────
+      - name: Fix Permissions
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            chown -R nobody:nogroup /home/${{ secrets.DOMAIN }}/public_html
+            chmod -R 755 /home/${{ secrets.DOMAIN }}/public_html
+            chmod 644 /home/${{ secrets.DOMAIN }}/public_html/.htaccess
+            echo "✅ Deploy selesai: $(date)"
+
+      # ── 8. Notifikasi hasil deploy ────────────────────────────
+      - name: Summary
+        if: success()
+        run: |
+          echo "## ✅ Deploy Berhasil!" >> $GITHUB_STEP_SUMMARY
+          echo "🌐 https://${{ secrets.DOMAIN }}" >> $GITHUB_STEP_SUMMARY
+          echo "🕐 $(date '+%d/%m/%Y %H:%M')" >> $GITHUB_STEP_SUMMARY

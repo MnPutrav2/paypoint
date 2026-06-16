@@ -1,0 +1,1344 @@
+basePath: /
+definitions:
+  authModel.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  authModel.ResponseToken:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+    type: object
+  bankModel.Bank:
+    properties:
+      id:
+        type: string
+      kode_bank:
+        type: string
+      nama:
+        type: string
+    type: object
+  bankModel.BankShow:
+    properties:
+      id:
+        type: string
+      kode_bank:
+        type: string
+      nama:
+        type: string
+    type: object
+  bankModel.BankUpdate:
+    properties:
+      kode_bank:
+        type: string
+      nama:
+        type: string
+    type: object
+  katalogModel.KatalogCreate:
+    properties:
+      harga:
+        type: integer
+      produk_id:
+        type: string
+      user_id:
+        type: string
+    type: object
+  katalogModel.KatalogShow:
+    properties:
+      harga_katalog:
+        type: integer
+      id:
+        type: string
+      produk:
+        $ref: "#/definitions/produkModel.ProdukShow"
+    type: object
+  katalogModel.UpdateKatalog:
+    properties:
+      harga:
+        type: integer
+    type: object
+  kategoriModel.Kategori:
+    properties:
+      deskripsi:
+        type: string
+      id:
+        type: string
+      nama:
+        type: string
+      ref_kategori:
+        $ref: "#/definitions/kategoriModel.RefKategori"
+    type: object
+  kategoriModel.KategoriCreate:
+    properties:
+      deskripsi:
+        type: string
+      nama:
+        type: string
+      ref_kategori_id:
+        type: string
+    type: object
+  kategoriModel.KategoriReference:
+    properties:
+      deskripsi:
+        type: string
+      id:
+        type: string
+      nama:
+        type: string
+      ref_kategori_id:
+        type: string
+    type: object
+  kategoriModel.KategoriShow:
+    properties:
+      deskripsi:
+        type: string
+      id:
+        type: string
+      nama:
+        type: string
+      ref_kategori:
+        $ref: "#/definitions/kategoriModel.RefKategoriShow"
+    type: object
+  kategoriModel.RefKategori:
+    properties:
+      id:
+        type: string
+      nama:
+        type: string
+    type: object
+  kategoriModel.RefKategoriCreate:
+    properties:
+      nama:
+        type: string
+    type: object
+  kategoriModel.RefKategoriShow:
+    properties:
+      id:
+        type: string
+      nama:
+        type: string
+    type: object
+  kategoriModel.Reference:
+    properties:
+      id:
+        type: string
+      nama:
+        type: string
+      values:
+        items:
+          $ref: "#/definitions/kategoriModel.KategoriReference"
+        type: array
+    type: object
+  model.KatalogTest:
+    properties:
+      meta:
+        $ref: "#/definitions/model.PaginationMeta"
+      result:
+        items:
+          $ref: "#/definitions/katalogModel.KatalogShow"
+        type: array
+    type: object
+  model.PaginationKategoriTest:
+    properties:
+      meta:
+        $ref: "#/definitions/model.PaginationMeta"
+      result:
+        items:
+          $ref: "#/definitions/kategoriModel.KategoriShow"
+        type: array
+    type: object
+  model.PaginationMeta:
+    properties:
+      next:
+        type: string
+      page:
+        type: integer
+      previous:
+        type: string
+      reference:
+        $ref: "#/definitions/model.ReferenceResult"
+      size:
+        type: integer
+      total_data:
+        type: integer
+    type: object
+  model.PaginationRefKategoriTest:
+    properties:
+      meta:
+        $ref: "#/definitions/model.PaginationMeta"
+      result:
+        items:
+          $ref: "#/definitions/kategoriModel.RefKategoriShow"
+        type: array
+    type: object
+  model.PaginationResponseTest:
+    properties:
+      meta:
+        $ref: "#/definitions/model.PaginationMeta"
+      result:
+        items:
+          $ref: "#/definitions/produkModel.Produk"
+        type: array
+    type: object
+  model.ReferenceResult:
+    properties:
+      data:
+        items:
+          $ref: "#/definitions/kategoriModel.Reference"
+        type: array
+      last:
+        type: string
+    type: object
+  model.ResponseMessage:
+    properties:
+      message:
+        type: string
+      reference:
+        $ref: "#/definitions/model.ReferenceResult"
+      status:
+        type: integer
+      success:
+        type: boolean
+    type: object
+  orderModel.Order:
+    properties:
+      id:
+        type: string
+      invoice:
+        type: string
+      nama_customer:
+        type: string
+      status:
+        $ref: "#/definitions/orderModel.status"
+      total:
+        type: integer
+      user:
+        $ref: "#/definitions/userModel.User"
+      user_id:
+        type: string
+      waktu:
+        type: string
+    type: object
+  orderModel.OrderAdd:
+    properties:
+      jumlah:
+        type: integer
+      katalog_id:
+        type: string
+      subtotal:
+        type: integer
+    type: object
+  orderModel.OrderItemResult:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      invoice:
+        type: string
+      nama_customer:
+        type: string
+      status:
+        type: string
+      total:
+        type: integer
+    type: object
+  orderModel.OrderListShow:
+    properties:
+      id:
+        type: string
+      jumlah:
+        type: integer
+      order_id:
+        type: string
+      produk:
+        $ref: "#/definitions/produkModel.ProdukShow"
+      total_harga:
+        type: integer
+    type: object
+  orderModel.OrderSetStatus:
+    properties:
+      status:
+        type: string
+    type: object
+  orderModel.status:
+    enum:
+      - batal
+      - selesai
+      - proses
+      - belum bayar
+      - sudah bayar
+    type: string
+    x-enum-varnames:
+      - batal
+      - selesai
+      - proses
+      - belum
+      - sudah
+  produkModel.Produk:
+    properties:
+      detail:
+        type: string
+      foto:
+        type: string
+      harga:
+        type: integer
+      id:
+        type: string
+      kategori:
+        $ref: "#/definitions/kategoriModel.Kategori"
+      kategori_id:
+        type: string
+      nama:
+        type: string
+    type: object
+  produkModel.ProdukShow:
+    properties:
+      detail:
+        type: string
+      foto:
+        type: string
+      harga:
+        type: integer
+      id:
+        type: string
+      kategori:
+        $ref: "#/definitions/kategoriModel.KategoriShow"
+      nama:
+        type: string
+    type: object
+  produkModel.ProdukTest:
+    properties:
+      detail:
+        type: string
+      foto:
+        type: string
+      harga:
+        type: integer
+      kategori_id:
+        type: string
+      nama:
+        type: string
+    type: object
+  produkModel.ProdukUpdate:
+    properties:
+      detail:
+        type: string
+      foto:
+        type: string
+      harga:
+        type: integer
+      kategori_id:
+        type: string
+      nama:
+        type: string
+    type: object
+  rekeningModel.Rekening:
+    properties:
+      bank:
+        $ref: "#/definitions/bankModel.Bank"
+      bank_id:
+        type: string
+      id:
+        type: string
+      nama:
+        type: string
+      nomor_rekening:
+        type: string
+      saldo:
+        type: integer
+      user:
+        $ref: "#/definitions/userModel.User"
+      user_id:
+        type: string
+    type: object
+  rekeningModel.RekeningSaldo:
+    properties:
+      saldo:
+        type: integer
+      type:
+        type: string
+    type: object
+  rekeningModel.RekeningShow:
+    properties:
+      bank:
+        $ref: "#/definitions/bankModel.BankShow"
+      id:
+        type: string
+      nama:
+        type: string
+      nomor_rekening:
+        type: string
+      saldo:
+        type: integer
+    type: object
+  stokModel.StokAdd:
+    properties:
+      stok:
+        type: integer
+      tipe:
+        type: string
+    type: object
+  userModel.User:
+    properties:
+      email:
+        type: string
+      foto:
+        type: string
+      id:
+        type: string
+      kategori:
+        $ref: "#/definitions/kategoriModel.Kategori"
+      nama:
+        type: string
+      no_telp:
+        type: string
+      password:
+        type: string
+      role:
+        type: string
+      username:
+        type: string
+    type: object
+  userModel.UserCreate:
+    properties:
+      email:
+        type: string
+      foto:
+        type: string
+      nama:
+        type: string
+      no_telp:
+        type: string
+      password:
+        type: string
+      role:
+        type: string
+      username:
+        type: string
+    type: object
+  userModel.UserPatch:
+    properties:
+      email:
+        type: string
+      foto:
+        type: string
+      nama:
+        type: string
+      no_telp:
+        type: string
+      password:
+        type: string
+      role:
+        type: string
+      username:
+        type: string
+    type: object
+  userModel.UserShow:
+    properties:
+      email:
+        type: string
+      foto:
+        type: string
+      id:
+        type: string
+      nama:
+        type: string
+      no_telp:
+        type: string
+      role:
+        type: string
+      username:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: dokumentasi API Kavi Kasir
+  title: KAVI Kasir API
+  version: "1.0"
+paths:
+  /auth/login:
+    post:
+      consumes:
+        - application/json
+      description: Login
+      parameters:
+        - description: Field login
+          in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/authModel.LoginRequest"
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/authModel.ResponseToken"
+      summary: Login
+      tags:
+        - auth
+  /auth/register:
+    post:
+      consumes:
+        - application/json
+      description: Membuat akun
+      parameters:
+        - description: Field order
+          in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/userModel.UserCreate"
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/model.ResponseMessage"
+      summary: Membuat akun
+      tags:
+        - auth
+  /bank:
+    post:
+      consumes:
+        - application/json
+      description: Tambah data bank
+      parameters:
+        - description: Field produk
+          in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/bankModel.Bank"
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/bankModel.Bank"
+      summary: Tambah data bank
+      tags:
+        - bank
+  /bank/{bank_id}:
+    delete:
+      consumes:
+        - application/json
+      description: Hapus data bank user
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/model.ResponseMessage"
+      summary: Hapus data bank user
+      tags:
+        - bank
+    put:
+      consumes:
+        - application/json
+      description: Mengubah data bank
+      parameters:
+        - description: bank_id
+          in: path
+          name: bank_id
+          required: true
+          type: string
+        - description: Field bank
+          in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/bankModel.BankUpdate"
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/model.ResponseMessage"
+      summary: Ubah bank
+      tags:
+        - bank
+  /bank/{user_id}:
+    get:
+      consumes:
+        - application/json
+      description: Ambil data bank berdasarkan user id
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: "#/definitions/bankModel.BankShow"
+            type: array
+      summary: Ambil data bank berdasarkan user id
+      tags:
+        - bank
+  /katalog:
+    get:
+      consumes:
+        - application/json
+      description: Menampilkan data katalog
+      parameters:
+        - description: page
+          in: path
+          name: page
+          type: integer
+        - description: size
+          in: path
+          name: size
+          type: integer
+        - description: keyword
+          in: path
+          name: keyword
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/model.KatalogTest"
+      summary: Menampilkan data katalog
+      tags:
+        - katalog
+    post:
+      consumes:
+        - application/json
+      description: Menambahkan katalog
+      parameters:
+        - description: Field order
+          in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/katalogModel.KatalogCreate"
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/model.ResponseMessage"
+      summary: Menambahkan katalog
+      tags:
+        - katalog
+  /katalog/{katalog_id}:
+    delete:
+      consumes:
+        - application/json
+      description: Menghapus data katalog
+      parameters:
+        - description: katalog_id
+          in: path
+          name: katalog_id
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/model.ResponseMessage"
+      summary: Hapus katalog
+      tags:
+        - katalog
+    get:
+      consumes:
+        - application/json
+      description: ambil data katalog
+      parameters:
+        - description: katalog_id
+          in: path
+          name: katalog_id
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/katalogModel.KatalogShow"
+      summary: Ambil katalog berdasarkan id
+      tags:
+        - katalog
+    patch:
+      consumes:
+        - application/json
+      description: Mengubah harga katalog
+      parameters:
+        - description: katalog_id
+          in: path
+          name: katalog_id
+          required: true
+          type: string
+        - description: Field katalog
+          in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/katalogModel.UpdateKatalog"
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/katalogModel.KatalogShow"
+      summary: Ubah harga katalog
+      tags:
+        - katalog
+  /kategori:
+    get:
+      consumes:
+        - application/json
+      description: Menampilkan kategori
+      parameters:
+        - description: page
+          in: path
+          name: page
+          type: integer
+        - description: size
+          in: path
+          name: size
+          type: integer
+        - description: keyword
+          in: path
+          name: keyword
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/model.PaginationKategoriTest"
+      summary: Menampilkan kategori
+      tags:
+        - kategori
+    post:
+      consumes:
+        - application/json
+      description: Membuat kategori
+      parameters:
+        - description: Field produk
+          in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/kategoriModel.KategoriCreate"
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/model.ResponseMessage"
+      summary: Buat kategori
+      tags:
+        - kategori
+  /kategori/{kategori_id}:
+    delete:
+      consumes:
+        - application/json
+      description: Menghapus data kategori
+      parameters:
+        - description: kategori_id
+          in: path
+          name: kategori_id
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/model.ResponseMessage"
+      summary: Hapus kategori
+      tags:
+        - kategori
+  /kategori/{ref_kategori_id}:
+    put:
+      consumes:
+        - application/json
+      description: Ubah data kategori
+      parameters:
+        - description: kategori_id
+          in: path
+          name: kategori_id
+          required: true
+          type: string
+        - description: Field kategori
+          in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/kategoriModel.KategoriCreate"
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/model.ResponseMessage"
+      summary: Ubah kategori
+      tags:
+        - kategori
+  /order:
+    get:
+      consumes:
+        - application/json
+      description: Menampilkan order list
+      parameters:
+        - description: page
+          in: path
+          name: page
+          type: integer
+        - description: size
+          in: path
+          name: size
+          type: integer
+        - description: keyword
+          in: path
+          name: keyword
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: "#/definitions/orderModel.Order"
+            type: array
+      summary: Menampilkan order list
+      tags:
+        - order
+    post:
+      consumes:
+        - application/json
+      description: Menambahkan order
+      parameters:
+        - description: Field order
+          in: body
+          name: body
+          required: true
+          schema:
+            items:
+              $ref: "#/definitions/orderModel.OrderAdd"
+            type: array
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/model.ResponseMessage"
+      summary: Menambahkan order
+      tags:
+        - order
+  /order/{order_id}:
+    delete:
+      consumes:
+        - application/json
+      description: hapus order
+      parameters:
+        - description: order_id
+          in: path
+          name: order_id
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/produkModel.Produk"
+      summary: Hapus order
+      tags:
+        - order
+    get:
+      consumes:
+        - application/json
+      description: Order
+      parameters:
+        - description: order_id
+          in: path
+          name: order_id
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: "#/definitions/orderModel.OrderListShow"
+            type: array
+      summary: Mendapatkan list order berdasarkan id
+      tags:
+        - order
+    patch:
+      consumes:
+        - application/json
+      description: update status order
+      parameters:
+        - description: order_id
+          in: path
+          name: order_id
+          required: true
+          type: string
+        - description: Field order
+          in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/orderModel.OrderSetStatus"
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/orderModel.OrderItemResult"
+      summary: Update status order
+      tags:
+        - order
+  /produk:
+    post:
+      consumes:
+        - application/json
+      description: Membuat data produk
+      parameters:
+        - description: Field produk
+          in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/produkModel.ProdukTest"
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/model.ResponseMessage"
+      summary: Buat produk
+      tags:
+        - produk
+  /produk/{produk_id}:
+    delete:
+      consumes:
+        - application/json
+      description: Menghapus data produk
+      parameters:
+        - description: produk_id
+          in: path
+          name: produk_id
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/model.ResponseMessage"
+      summary: Hapus produk
+      tags:
+        - produk
+    get:
+      consumes:
+        - application/json
+      description: ambil data produk
+      parameters:
+        - description: produk_id
+          in: path
+          name: produk_id
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/produkModel.Produk"
+      summary: Ambil produk berdasarkan id
+      tags:
+        - produk
+    put:
+      consumes:
+        - application/json
+      description: Mengubah data produk
+      parameters:
+        - description: produk_id
+          in: path
+          name: produk_id
+          required: true
+          type: string
+        - description: Field produk
+          in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/produkModel.ProdukUpdate"
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/model.ResponseMessage"
+      summary: Ubah produk
+      tags:
+        - produk
+  /produk/{user_id}:
+    patch:
+      consumes:
+        - application/json
+      description: Update data user
+      parameters:
+        - description: user_id
+          in: path
+          name: user_id
+          required: true
+          type: string
+        - description: Field user
+          in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/userModel.UserPatch"
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/userModel.UserShow"
+      summary: Update data user
+      tags:
+        - user
+  /ref-kategori:
+    get:
+      consumes:
+        - application/json
+      description: Menampilkan data referensi kategori
+      parameters:
+        - description: page
+          in: path
+          name: page
+          type: integer
+        - description: size
+          in: path
+          name: size
+          type: integer
+        - description: keyword
+          in: path
+          name: keyword
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/model.PaginationRefKategoriTest"
+      summary: Menampilkan data referensi kategori
+      tags:
+        - referensi kategori
+    post:
+      consumes:
+        - application/json
+      description: Membuat referensi kategori
+      parameters:
+        - description: Field produk
+          in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/kategoriModel.RefKategoriCreate"
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/model.ResponseMessage"
+      summary: Buat referensi kategori
+      tags:
+        - referensi kategori
+  /ref-kategori/{ref_kategori_id}:
+    delete:
+      consumes:
+        - application/json
+      description: Menghapus data referensi kategori
+      parameters:
+        - description: ref_kategori_id
+          in: path
+          name: ref_kategori_id
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/model.ResponseMessage"
+      summary: Hapus referensi kategori
+      tags:
+        - referensi kategori
+    put:
+      consumes:
+        - application/json
+      description: Ubah data referensi kategori
+      parameters:
+        - description: ref_kategori_id
+          in: path
+          name: ref_kategori_id
+          required: true
+          type: string
+        - description: Field kategori
+          in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/kategoriModel.RefKategoriCreate"
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/model.ResponseMessage"
+      summary: Ubah referensi kategori
+      tags:
+        - referensi kategori
+  /refresh/reference:
+    get:
+      consumes:
+        - application/json
+      description: Menampilkan semua data referensi kategori dan kategori
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/kategoriModel.Reference"
+      summary: Menampilkan semua data referensi kategori dan kategori
+      tags:
+        - refresh reference
+  /rekening:
+    get:
+      consumes:
+        - application/json
+      description: Ambil data rekening
+      parameters:
+        - description: page
+          in: path
+          name: page
+          type: integer
+        - description: size
+          in: path
+          name: size
+          type: integer
+        - description: keyword
+          in: path
+          name: keyword
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/model.PaginationResponseTest"
+      summary: Ambil data rekening
+      tags:
+        - rekening
+    post:
+      consumes:
+        - application/json
+      description: Tambah data rekening
+      parameters:
+        - description: Field produk
+          in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/rekeningModel.Rekening"
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/rekeningModel.Rekening"
+      summary: Tambah data rekening
+      tags:
+        - rekening
+  /rekening/{rekening_id}:
+    delete:
+      consumes:
+        - application/json
+      description: Hapus data rekening user
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/model.ResponseMessage"
+      summary: Hapus data rekening user
+      tags:
+        - rekening
+    patch:
+      consumes:
+        - application/json
+      description: Tambah/kurangi saldo
+      parameters:
+        - description: Field rekening
+          in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/rekeningModel.RekeningSaldo"
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/model.ResponseMessage"
+      summary: Tambah/kurangi saldo
+      tags:
+        - rekening
+  /rekening/{user_id}:
+    get:
+      consumes:
+        - application/json
+      description: Ambil data rekening berdasarkan user id
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: "#/definitions/rekeningModel.RekeningShow"
+            type: array
+      summary: Ambil data rekening berdasarkan user id
+      tags:
+        - rekening
+  /stok/{produk_id}:
+    patch:
+      consumes:
+        - application/json
+      description: Mengubah atau menambah stok produk
+      parameters:
+        - description: produk_id
+          in: path
+          name: produk_id
+          required: true
+          type: string
+        - description: Field produk
+          in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/stokModel.StokAdd"
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/model.ResponseMessage"
+      summary: Tambah atau rubah stok produk
+      tags:
+        - stok
+  /users:
+    get:
+      consumes:
+        - application/json
+      description: Ambil semua data user
+      parameters:
+        - description: page
+          in: path
+          name: page
+          type: integer
+        - description: size
+          in: path
+          name: size
+          type: integer
+        - description: keyword
+          in: path
+          name: keyword
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/model.PaginationResponseTest"
+      summary: Ambil semua data user
+      tags:
+        - user
+  /users/{user_id}:
+    delete:
+      consumes:
+        - application/json
+      description: Menghapus user
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/model.ResponseMessage"
+      summary: Menghapus data user
+      tags:
+        - user
+    get:
+      consumes:
+        - application/json
+      description: Menampilkan detail user
+      parameters:
+        - description: user_id
+          in: path
+          name: user_id
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/userModel.UserShow"
+      summary: Menampilkan detail user
+      tags:
+        - user
+swagger: "2.0"

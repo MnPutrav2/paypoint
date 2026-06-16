@@ -1,0 +1,18 @@
+[
+	{
+		"username": "superduper",
+		"nama": "Admin1",
+		"email": "admin1@gmail.com",
+		"password": "123!@#qweQWE",
+		"no_telp": "089646615484",
+		"role": "superadmin"
+	},
+	{
+		"username": "seller1",
+		"nama": "Seller1",
+		"email": "seller1@gmail.com",
+		"password": "123!@#qweQWE",
+		"no_telp": "0895405466688",
+		"role": "user"
+	}
+]

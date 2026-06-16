@@ -1,0 +1,60 @@
+[
+	{
+		"nama": "role",
+		"values": [
+			{ "nama": "superadmin", "deskripsi": "superadmin" },
+			{ "nama": "admin", "deskripsi": "admin" },
+			{ "nama": "seller", "deskripsi": "seller" },
+			{ "nama": "user", "deskripsi": "user" }
+		]
+	},
+	{
+		"nama": "produk",
+		"values": [
+			{ "nama": "aplikasi", "deskripsi": "aplikasi" },
+			{ "nama": "template design", "deskripsi": "template design" },
+			{ "nama": "template power point", "deskripsi": "template power point" },
+			{ "nama": "template ui", "deskripsi": "template ui" },
+			{ "nama": "game", "deskripsi": "game" },
+			{ "nama": "e-book", "deskripsi": "e-book" },
+			{ "nama": "laptop", "deskripsi": "laptop" },
+			{ "nama": "hp", "deskripsi": "hp" },
+			{ "nama": "tablet", "deskripsi": "tablet" }
+		]
+	},
+	{
+		"nama": "hp",
+		"values": [
+			{ "nama": "iphone", "deskripsi": "iphone" },
+			{ "nama": "samsung", "deskripsi": "samsung" },
+			{ "nama": "oppo", "deskripsi": "oppo" }
+		]
+	},
+	{
+		"nama": "laptop",
+		"values": [
+			{ "nama": "macbook", "deskripsi": "macbook" },
+			{ "nama": "samsung", "deskripsi": "samsung" },
+			{ "nama": "asus", "deskripsi": "asus" }
+		]
+	},
+	{
+		"nama": "status pembayaran",
+		"values": [
+			{ "nama": "batal", "deskripsi": "1" },
+			{ "nama": "selesai", "deskripsi": "2" },
+			{ "nama": "diproses", "deskripsi": "3" },
+			{ "nama": "sudah bayar", "deskripsi": "4" },
+			{ "nama": "belum bayar", "deskripsi": "5" },
+			{ "nama": "expired", "deskripsi": "6" },
+			{ "nama": "pending", "deskripsi": "7" }
+		]
+	},
+	{
+		"nama": "metode pembayaran",
+		"values": [
+			{ "nama": "tunai", "deskripsi": "1" },
+			{ "nama": "non-tunai", "deskripsi": "2" }
+		]
+	}
+]
