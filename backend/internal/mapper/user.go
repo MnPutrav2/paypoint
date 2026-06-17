@@ -12,6 +12,9 @@ import (
 )
 
 func MappingUserCreate(val []any, key string) userModel.User {
+
+	id, _ := uuid.Parse("a14fe549-5900-4fa0-a69f-d5f711d8502b")
+
 	return userModel.User{
 		Username:   val[0].(string),
 		Password:   val[1].(string),
@@ -19,7 +22,7 @@ func MappingUserCreate(val []any, key string) userModel.User {
 		Foto:       key,
 		Email:      val[3].(string),
 		NoTelp:     val[4].(string),
-		KategoriID: val[5].(uuid.UUID),
+		KategoriID: id,
 	}
 }
 

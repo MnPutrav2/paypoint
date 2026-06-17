@@ -27,7 +27,7 @@ class DioClient {
         // iOS simulator    : http://127.0.0.1:8080/api/v1
         // HP fisik (WiFi)  : http://192.168.x.x:8080/api/v1
         // Production       : https://api.domainmu.com/api/v1
-        baseUrl: 'https://dev-kasir.kavi.co.id/backend',
+        baseUrl: 'http://localhost:8080/backend',
         connectTimeout: const Duration(seconds: 10),
         receiveTimeout: const Duration(seconds: 15),
         headers: {'Content-Type': 'application/json'},
@@ -128,7 +128,7 @@ class DioClient {
       // Pakai Dio BARU tanpa interceptor
       // Kalau pakai _dio yang sama, akan infinite loop (401 → refresh → 401 → ...)
       final plainDio = Dio(
-        BaseOptions(baseUrl: 'https://dev-kasir.kavi.co.id/backend'),
+        BaseOptions(baseUrl: 'http://localhost:8080/backend'),
       );
       final response = await plainDio.post(
         '/auth/refresh',

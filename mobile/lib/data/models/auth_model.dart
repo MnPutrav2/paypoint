@@ -2,6 +2,8 @@
 
 // ── Request: yang dikirim ke Go ──────────────────────────────────────────────
 // Setara dengan `values` di Formik Next.js
+import 'package:dio/dio.dart';
+
 class LoginRequest {
   final String username; // bisa email atau username
   final String password;
@@ -36,21 +38,39 @@ class LoginResponse {
 }
 
 class RegisterRequest {
+  final String username;
+  final String name;
+  final String phoneNumber;
   final String email;
   final String password;
   final String confirmPassword;
 
   const RegisterRequest({
+    required this.username,
+    required this.name,
+    required this.phoneNumber,
     required this.email,
     required this.password,
     required this.confirmPassword,
   });
 
   Map<String, dynamic> toJson() => {
+    'username': username,
+    'nama': name,
+    'nomor_telepon': phoneNumber,
     'email': email,
     'password': password,
     'confirm_password': confirmPassword,
   };
+
+  FormData toFormData() => FormData.fromMap({
+      'username': username,
+      'nama': name,
+      'nomor_telepon': phoneNumber,
+      'email': email,
+      'password': password,
+      'confirm_password': confirmPassword,
+    });
 }
 
 // ── Register Response: yang diterima dari Go ─────────────────────────────────

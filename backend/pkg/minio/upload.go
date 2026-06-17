@@ -57,7 +57,7 @@ func UploadFile(file multipart.File, size int64, contentType string, ext ...stri
 		return "", err
 	}
 
-	url := fmt.Sprintf("%s/%s/%s", publicURL, bucket, objectName)
+	url := fmt.Sprintf("%s", objectName)
 
 	fmt.Println("🔍 MINIO_PUBLIC_URL:", publicURL)
 	fmt.Println("🔍 bucket:", bucket)

@@ -65,7 +65,7 @@ class TransaksiRepository {
     required int statusInt,
   }) async {
     // debugPrint('📦 PATCH /order/$id body: ${{'status_int': statusInt}}');
-    await dio.patch('/order/$id', data: {'status_int': statusInt});
+    await dio.patch('/order/$id', data: {'status': statusInt});
   }
 
   //   Future<void> updateStatus({

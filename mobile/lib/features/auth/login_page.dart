@@ -16,7 +16,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kasir_offline/features/providers/login_provider.dart';
-import 'package:kasir_offline/core/index.dart';
 
 // Ganti dengan import dari project kamu yang asli
 // import 'package:kasir_offline/core/index.dart';

@@ -89,7 +89,7 @@ class _ReportPageState extends ConsumerState<ReportPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Laporan', style: AppTextStyles.heading2),
-            Text('KAVI - Kasir', style: AppTextStyles.caption),
+            Text('Paypoint', style: AppTextStyles.caption),
           ],
         ),
         IconButton(
@@ -469,6 +469,8 @@ class _ReportPageState extends ConsumerState<ReportPage> {
           ),
 
           const SizedBox(height: 16),
+          CardMarketBasket(data: data.marketBasket),
+          const SizedBox(height: 16),
 
           // ── Chart 2: Prediksi Omzet ─────────────────────────────────
           GrafikLinearOmzet(
@@ -486,9 +488,6 @@ class _ReportPageState extends ConsumerState<ReportPage> {
             ),
           ),
 
-          const SizedBox(height: 16),
-
-          CardMarketBasket(data: data.marketBasket),
           const SizedBox(height: 24),
         ],
       );

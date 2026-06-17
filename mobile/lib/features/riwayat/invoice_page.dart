@@ -3,17 +3,366 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:kasir_offline/core/index.dart';
 import 'package:kasir_offline/data/models/transaksi_model.dart';
-import 'package:kasir_offline/data/repositories/transaksi_repository.dart';
+import 'package:kasir_offline/features/providers/transaksi_provider.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 
-final invoiceDetailProvider = FutureProvider.autoDispose
-    .family<List<TransaksiItem>, String>((ref, id) {
-      final repo = ref.watch(transaksiRepositoryProvider);
-      return repo.getTransaksiDetail(id);
-    });
+// ✅ invoiceDetailProvider & updateStatusProvider dipindah ke transaksi_provider.dart
+// Tidak didefinisikan di sini lagi
 
-// ✅ ConsumerStatefulWidget
+final _screenshotController = ScreenshotController();
+
+String _formatRupiah(int value) {
+  final formatter = NumberFormat('#,###', 'id_ID');
+  return 'Rp ${formatter.format(value)}';
+}
+
+String _formatTanggal(String raw) {
+  try {
+    final dt = DateTime.parse(raw).toLocal();
+    return DateFormat('d MMMM yyyy, HH:mm', 'id_ID').format(dt);
+  } catch (_) {
+    return raw;
+  }
+}
+
+Widget buildItemsCard(List<TransaksiItem> items) {
+  return Container(
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: AppColors.backgroundCard,
+      borderRadius: BorderRadius.circular(16),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.04),
+          blurRadius: 8,
+          offset: const Offset(0, 2),
+        ),
+      ],
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                color: AppColors.primary.withOpacity(0.08),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(
+                Icons.shopping_bag_rounded,
+                size: 16,
+                color: AppColors.primary,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Text('Detail Pesanan', style: AppTextStyles.bodyBold),
+            const Spacer(),
+            Text('${items.length} item', style: AppTextStyles.caption),
+          ],
+        ),
+        const SizedBox(height: 14),
+        Row(
+          children: [
+            Expanded(
+              flex: 3,
+              child: Text(
+                'Produk',
+                style: AppTextStyles.caption.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            Expanded(
+              child: Text(
+                'Qty',
+                style: AppTextStyles.caption.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Expanded(
+              flex: 2,
+              child: Text(
+                'Subtotal',
+                style: AppTextStyles.caption.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+                textAlign: TextAlign.end,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        const Divider(color: Color(0xFFF1F5F9), thickness: 1),
+        const SizedBox(height: 4),
+        ...items.map(
+          (item) => Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color: AppColors.primary.withOpacity(0.4),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          item.produk,
+                          style: AppTextStyles.caption.copyWith(
+                            color: AppColors.textPrimary,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withOpacity(0.08),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      '${item.jumlah}x',
+                      style: AppTextStyles.caption.copyWith(
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    _formatRupiah(item.subtotal),
+                    style: AppTextStyles.caption.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textPrimary,
+                    ),
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+// InvoiceCapture widget tidak berubah — murni UI
+class InvoiceCapture extends StatelessWidget {
+  final TransaksiModel transaksi;
+  final List<TransaksiItem> items;
+
+  const InvoiceCapture({
+    super.key,
+    required this.transaksi,
+    required this.items,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: AppColors.background,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [AppColors.primary, AppColors.primaryDark],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    width: 56,
+                    height: 56,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Center(
+                      child: Icon(
+                        Icons.receipt_long_rounded,
+                        color: Colors.white,
+                        size: 28,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  const Text(
+                    'INVOICE',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      letterSpacing: 3,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    transaksi.invoice,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            _buildCard(
+              child: Column(
+                children: [
+                  _buildRow('No. Invoice', transaksi.invoice),
+                  const Divider(color: Color(0xFFF1F5F9)),
+                  _buildRow(
+                    'Customer',
+                    transaksi.namaCustomer.isEmpty
+                        ? 'Umum'
+                        : transaksi.namaCustomer,
+                  ),
+                  const Divider(color: Color(0xFFF1F5F9)),
+                  _buildRow('Tanggal', _formatTanggal(transaksi.createdAt)),
+                  const Divider(color: Color(0xFFF1F5F9)),
+                  _buildRow(
+                    'Status',
+                    transaksi.status.isEmpty ? 'pending' : transaksi.status,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            buildItemsCard(items),
+            const SizedBox(height: 16),
+            _buildCard(
+              child: Column(
+                children: [
+                  _buildRow('Subtotal', _formatRupiah(transaksi.total)),
+                  const Divider(color: Color(0xFFF1F5F9)),
+                  _buildRow('Diskon', '- Rp 0'),
+                  const Divider(color: Color(0xFFF1F5F9)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Total',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      Text(
+                        _formatRupiah(transaksi.total),
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: const [
+                Expanded(child: Divider(color: Color(0xFFE2E8F0))),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  child: Text(
+                    'Terima kasih',
+                    style: TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                ),
+                Expanded(child: Divider(color: Color(0xFFE2E8F0))),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Powered by Paypoint',
+              style: TextStyle(
+                fontSize: 12,
+                color: AppColors.primary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
+        ),
+      ),
+    );
+  }
+
+  static Widget _buildCard({required Widget child}) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: child,
+    );
+  }
+
+  static Widget _buildRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+          Text(
+            value,
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class InvoicePage extends ConsumerStatefulWidget {
   final TransaksiModel transaksi;
+
   const InvoicePage({super.key, required this.transaksi});
 
   @override
@@ -21,19 +370,7 @@ class InvoicePage extends ConsumerStatefulWidget {
 }
 
 class _InvoicePageState extends ConsumerState<InvoicePage> {
-  String _formatRupiah(int value) {
-    final formatter = NumberFormat('#,###', 'id_ID');
-    return 'Rp ${formatter.format(value)}';
-  }
-
-  String _formatTanggal(String raw) {
-    try {
-      final dt = DateTime.parse(raw).toLocal();
-      return DateFormat('d MMMM yyyy, HH:mm', 'id_ID').format(dt);
-    } catch (_) {
-      return raw;
-    }
-  }
+  List<TransaksiItem> _cachedItems = [];
 
   Color _statusColor(String status) {
     switch (status.toLowerCase()) {
@@ -101,28 +438,74 @@ class _InvoicePageState extends ConsumerState<InvoicePage> {
 
     if (confirm != true) return;
 
-    try {
-      final repo = ref.read(transaksiRepositoryProvider);
-      await repo.updateStatus(id: widget.transaksi.id, statusInt: statusInt);
+    // ✅ Panggil updateStatusProvider — bukan repo langsung
+    await ref
+        .read(updateStatusProvider.notifier)
+        .update(id: widget.transaksi.id, statusInt: statusInt);
 
+    final state = ref.read(updateStatusProvider);
+
+    if (!mounted) return;
+
+    if (state.isSuccess) {
+      ref.read(updateStatusProvider.notifier).reset();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            statusInt == StatusTransaksi.selesai
+                ? '✅ Order selesai!'
+                : '✅ Pembayaran dikonfirmasi!',
+          ),
+          backgroundColor: const Color(0xFF16A34A),
+        ),
+      );
+      Navigator.pop(context, true);
+    } else if (state.error != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Gagal update status: ${state.error}'),
+          backgroundColor: const Color(0xFFEF4444),
+        ),
+      );
+    }
+  }
+
+  Future<void> _saveImage() async {
+    try {
       if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Menyimpan invoice...')));
+      }
+      final image = await _screenshotController.captureFromLongWidget(
+        InvoiceCapture(transaksi: widget.transaksi, items: _cachedItems),
+        context: context,
+        pixelRatio: 3.0,
+        constraints: const BoxConstraints(maxWidth: 400),
+      );
+      final result = await ImageGallerySaverPlus.saveImage(
+        image,
+        name: 'invoice_${widget.transaksi.invoice}',
+        quality: 100,
+      );
+      if (mounted) {
+        final success = result['isSuccess'] as bool? ?? false;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              statusInt == StatusTransaksi.selesai
-                  ? '✅ Order selesai!'
-                  : '✅ Pembayaran dikonfirmasi!',
+              success ? '✅ Invoice berhasil disimpan!' : '❌ Gagal menyimpan',
             ),
-            backgroundColor: const Color(0xFF16A34A),
+            backgroundColor: success
+                ? const Color(0xFF16A34A)
+                : const Color(0xFFEF4444),
           ),
         );
-        Navigator.pop(context, true); // ✅ refresh riwayat
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Gagal update status: $e'),
+            content: Text('Gagal: $e'),
             backgroundColor: const Color(0xFFEF4444),
           ),
         );
@@ -132,47 +515,54 @@ class _InvoicePageState extends ConsumerState<InvoicePage> {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ Pakai invoiceDetailProvider dari transaksi_provider.dart
     final detailAsync = ref.watch(invoiceDetailProvider(widget.transaksi.id));
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: CustomScrollView(
-        slivers: [
-          _buildAppBar(context),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
-              child: Column(
-                children: [
-                  _buildHeader(),
-                  const SizedBox(height: 16),
-                  _buildInfoCard(),
-                  const SizedBox(height: 16),
-                  detailAsync.when(
-                    loading: () => const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(32),
-                        child: CircularProgressIndicator(),
+      body: Screenshot(
+        controller: _screenshotController,
+        child: CustomScrollView(
+          slivers: [
+            _buildAppBar(context),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
+                child: Column(
+                  children: [
+                    _buildHeader(),
+                    const SizedBox(height: 16),
+                    _buildInfoCard(),
+                    const SizedBox(height: 16),
+                    detailAsync.when(
+                      loading: () => const Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(32),
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                      error: (e, _) => _buildErrorState(),
+                      data: (items) {
+                        _cachedItems = items;
+                        return buildItemsCard(items);
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    _buildTotalCard(
+                      detailAsync.when(
+                        data: (items) => items,
+                        loading: () => [],
+                        error: (_, __) => [],
                       ),
                     ),
-                    error: (e, _) => _buildErrorState(),
-                    data: (items) => _buildItemsCard(items),
-                  ),
-                  const SizedBox(height: 16),
-                  _buildTotalCard(
-                    detailAsync.when(
-                      data: (items) => items,
-                      loading: () => [],
-                      error: (_, __) => [],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  _buildFooter(),
-                ],
+                    const SizedBox(height: 16),
+                    _buildFooter(),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       bottomNavigationBar: _buildBottomBar(context),
     );
@@ -370,150 +760,6 @@ class _InvoicePageState extends ConsumerState<InvoicePage> {
     );
   }
 
-  Widget _buildItemsCard(List<TransaksiItem> items) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.backgroundCard,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 32,
-                height: 32,
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.08),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: const Icon(
-                  Icons.shopping_bag_rounded,
-                  size: 16,
-                  color: AppColors.primary,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Text('Detail Pesanan', style: AppTextStyles.bodyBold),
-              const Spacer(),
-              Text('${items.length} item', style: AppTextStyles.caption),
-            ],
-          ),
-          const SizedBox(height: 14),
-          Row(
-            children: [
-              Expanded(
-                flex: 3,
-                child: Text(
-                  'Produk',
-                  style: AppTextStyles.caption.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Text(
-                  'Qty',
-                  style: AppTextStyles.caption.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Expanded(
-                flex: 2,
-                child: Text(
-                  'Subtotal',
-                  style: AppTextStyles.caption.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-                  textAlign: TextAlign.end,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          const Divider(color: Color(0xFFF1F5F9), thickness: 1),
-          const SizedBox(height: 4),
-          ...items.map(
-            (item) => Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: AppColors.primary.withOpacity(0.4),
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            item.produk,
-                            style: AppTextStyles.caption.copyWith(
-                              color: AppColors.textPrimary,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 6,
-                        vertical: 2,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary.withOpacity(0.08),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Text(
-                        '${item.jumlah}x',
-                        style: AppTextStyles.caption.copyWith(
-                          color: AppColors.primary,
-                          fontWeight: FontWeight.w700,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Text(
-                      _formatRupiah(item.subtotal),
-                      style: AppTextStyles.caption.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
-                      ),
-                      textAlign: TextAlign.end,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildTotalCard(List<TransaksiItem> items) {
     final subtotal = items.fold(0, (sum, e) => sum + e.subtotal);
     return Container(
@@ -593,7 +839,7 @@ class _InvoicePageState extends ConsumerState<InvoicePage> {
         ),
         const SizedBox(height: 8),
         Text(
-          'Powered by KAVI Kasir',
+          'Powered by Paypoint',
           style: AppTextStyles.caption.copyWith(
             color: AppColors.primary,
             fontWeight: FontWeight.w600,
@@ -632,7 +878,6 @@ class _InvoicePageState extends ConsumerState<InvoicePage> {
     );
   }
 
-  // ✅ Satu _buildBottomBar dengan tombol Bayar/Selesai/Share
   Widget _buildBottomBar(BuildContext context) {
     final statusInt = widget.transaksi.statusInt;
     final belumBayar =
@@ -640,6 +885,9 @@ class _InvoicePageState extends ConsumerState<InvoicePage> {
         statusInt == StatusTransaksi.pending ||
         statusInt == 0;
     final sudahBayar = statusInt == StatusTransaksi.sudahBayar;
+
+    // ✅ Watch updateStatusProvider untuk loading state
+    final updateState = ref.watch(updateStatusProvider);
 
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
@@ -656,7 +904,6 @@ class _InvoicePageState extends ConsumerState<InvoicePage> {
       ),
       child: Row(
         children: [
-          // Tombol kembali
           Expanded(
             child: GestureDetector(
               onTap: () => Navigator.pop(context),
@@ -680,18 +927,18 @@ class _InvoicePageState extends ConsumerState<InvoicePage> {
             ),
           ),
           const SizedBox(width: 10),
-
-          // ✅ Tombol Bayar
           if (belumBayar)
             Expanded(
               flex: 2,
               child: GestureDetector(
-                onTap: () => _updateStatus(
-                  context,
-                  StatusTransaksi.sudahBayar,
-                  'Konfirmasi Pembayaran',
-                  'Tandai order ini sudah bayar?',
-                ),
+                onTap: updateState.isLoading
+                    ? null
+                    : () => _updateStatus(
+                        context,
+                        StatusTransaksi.sudahBayar,
+                        'Konfirmasi Pembayaran',
+                        'Tandai order ini sudah bayar?',
+                      ),
                 child: Container(
                   height: 48,
                   decoration: BoxDecoration(
@@ -701,38 +948,50 @@ class _InvoicePageState extends ConsumerState<InvoicePage> {
                       color: const Color(0xFFF59E0B).withOpacity(0.5),
                     ),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.payments_rounded,
-                        color: Color(0xFFF59E0B),
-                        size: 18,
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        'Bayar',
-                        style: AppTextStyles.label.copyWith(
-                          color: const Color(0xFFF59E0B),
-                          fontWeight: FontWeight.w700,
+                  child: updateState.isLoading
+                      ? const Center(
+                          child: SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Color(0xFFF59E0B),
+                            ),
+                          ),
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.payments_rounded,
+                              color: Color(0xFFF59E0B),
+                              size: 18,
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              'Bayar',
+                              style: AppTextStyles.label.copyWith(
+                                color: const Color(0xFFF59E0B),
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
                 ),
               ),
             ),
-          // ✅ Tombol Selesai
           if (sudahBayar)
             Expanded(
               flex: 2,
               child: GestureDetector(
-                onTap: () => _updateStatus(
-                  context,
-                  StatusTransaksi.selesai,
-                  'Selesaikan Order',
-                  'Tandai order ini selesai?',
-                ),
+                onTap: updateState.isLoading
+                    ? null
+                    : () => _updateStatus(
+                        context,
+                        StatusTransaksi.selesai,
+                        'Selesaikan Order',
+                        'Tandai order ini selesai?',
+                      ),
                 child: Container(
                   height: 48,
                   decoration: BoxDecoration(
@@ -740,44 +999,44 @@ class _InvoicePageState extends ConsumerState<InvoicePage> {
                       colors: [AppColors.primary, AppColors.primaryDark],
                     ),
                     borderRadius: BorderRadius.circular(14),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.primary.withOpacity(0.3),
-                        blurRadius: 12,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.check_circle_rounded,
-                        color: Colors.white,
-                        size: 18,
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        'Selesai',
-                        style: AppTextStyles.label.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
+                  child: updateState.isLoading
+                      ? const Center(
+                          child: SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          ),
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.check_circle_rounded,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              'Selesai',
+                              style: AppTextStyles.label.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
                 ),
               ),
             ),
-
-          // ✅ Tombol Share (order selesai)
-          if (!belumBayar && !sudahBayar)
+          if (!belumBayar && sudahBayar)
             Expanded(
               flex: 2,
               child: GestureDetector(
-                onTap: () {
-                  // TODO: share/print PDF
-                },
+                onTap: _saveImage,
                 child: Container(
                   height: 48,
                   decoration: BoxDecoration(
@@ -790,13 +1049,13 @@ class _InvoicePageState extends ConsumerState<InvoicePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Icon(
-                        Icons.share_rounded,
+                        Icons.download_rounded,
                         color: Colors.white,
                         size: 18,
                       ),
                       const SizedBox(width: 6),
                       Text(
-                        'Bagikan',
+                        'Simpan Gambar',
                         style: AppTextStyles.label.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.w700,

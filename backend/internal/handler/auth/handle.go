@@ -8,14 +8,11 @@ import (
 	authService "kavi-kasir/internal/service/auth"
 	"kavi-kasir/pkg/enc"
 	"kavi-kasir/pkg/form"
-	"kavi-kasir/pkg/middleware"
 	"kavi-kasir/pkg/minio"
 	"kavi-kasir/pkg/response"
 	"kavi-kasir/pkg/util"
 	"net/http"
 	"time"
-
-	"github.com/google/uuid"
 )
 
 // @Summary      Login
@@ -63,8 +60,8 @@ func Login(serv authService.AuthService) http.HandlerFunc {
 // @Success      200 {object} model.ResponseMessage
 // @Router       /auth/register [post]
 func Register(serv authService.AuthService) http.HandlerFunc {
-	return middleware.CTFormData(func(w http.ResponseWriter, r *http.Request) {
-		val, err := form.IsEmptyForm(r, []any{"", "", "", "", "", uuid.UUID{}}, []string{"username", "password", "nama", "email", "nomor_telepon", "role"})
+	return func(w http.ResponseWriter, r *http.Request) {
+		val, err := form.IsEmptyForm(r, []any{"", "", "", "", ""}, []string{"username", "password", "nama", "email", "nomor_telepon"})
 		if err != nil {
 			response.Message(err.Error(), err.Error(), "WARN", 400, w, r)
 			return
@@ -72,7 +69,16 @@ func Register(serv authService.AuthService) http.HandlerFunc {
 
 		file, header, err := r.FormFile("foto")
 		if err != nil {
-			response.Message("failed upload file", err.Error(), "ERROR", 400, w, r)
+			body := mapper.MappingUserCreate(val, "-")
+			result, err := serv.CreateAccountService(&body)
+			if err != nil {
+				message, code := errorhttp.Map(err)
+				response.Message(message, err.Error(), "WARN", code, w, r)
+				return
+			}
+
+			ma := mapper.MappingSingleUsers(result)
+			response.JSON(ma, "success", "INFO", 201, w, r)
 			return
 		}
 
@@ -92,5 +98,5 @@ func Register(serv authService.AuthService) http.HandlerFunc {
 
 		ma := mapper.MappingSingleUsers(result)
 		response.JSON(ma, "success", "INFO", 201, w, r)
-	})
+	}
 }

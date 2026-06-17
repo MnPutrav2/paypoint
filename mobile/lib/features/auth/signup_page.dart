@@ -25,7 +25,10 @@ class SignupPage extends ConsumerStatefulWidget {
 
 class _SignupPageState extends ConsumerState<SignupPage> {
   // ── Controllers (satu per field) ─────────────────────────────────────────
+  final _username = TextEditingController();
+  final _name = TextEditingController();
   final _emailController = TextEditingController();
+  final _phoneNumber = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPassController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -35,7 +38,10 @@ class _SignupPageState extends ConsumerState<SignupPage> {
 
   @override
   void dispose() {
+    _username.dispose();
+    _name.dispose();
     _emailController.dispose();
+    _phoneNumber.dispose();
     _passwordController.dispose();
     _confirmPassController.dispose();
     super.dispose();
@@ -84,6 +90,9 @@ class _SignupPageState extends ConsumerState<SignupPage> {
     await ref
         .read(registerProvider.notifier)
         .register(
+          username: _username.text,
+          name: _name.text,
+          phoneNumber: _phoneNumber.text,
           email: _emailController.text.trim(),
           password: _passwordController.text,
           confirmPassword: _confirmPassController.text,
@@ -158,15 +167,10 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                 Center(
                   child: Column(
                     children: [
-                      Image.asset(
-                        'assets/logo/icon-white.png',
-                        height: 80,
-                        // errorBuilder supaya tidak crash kalau asset belum ada
-                        errorBuilder: (_, __, ___) => const Icon(
-                          Icons.storefront,
-                          size: 80,
-                          color: Color(0xFF1F5D84),
-                        ),
+                      Icon(
+                        Icons.storefront,
+                        size: 80,
+                        color: Color(0xFF1F5D84),
                       ),
                       const SizedBox(height: 8),
                       Text(
@@ -217,6 +221,34 @@ class _SignupPageState extends ConsumerState<SignupPage> {
 
                 const SizedBox(height: 12),
 
+                // ── INPUT USERNAME ───────────────────────────────────────────
+                TextFormField(
+                  controller: _username,
+                  keyboardType: TextInputType.text,
+                  textInputAction: TextInputAction.next,
+                  enabled: !state.isLoading,
+                  decoration: _inputDecoration(
+                    hint: 'Username',
+                    icon: Icons.people,
+                  ),
+                ),
+
+                const SizedBox(height: 12),
+
+                // ── INPUT NAME ───────────────────────────────────────────
+                TextFormField(
+                  controller: _name,
+                  keyboardType: TextInputType.text,
+                  textInputAction: TextInputAction.next,
+                  enabled: !state.isLoading,
+                  decoration: _inputDecoration(
+                    hint: 'Nama',
+                    icon: Icons.people,
+                  ),
+                ),
+
+                const SizedBox(height: 12),
+
                 // ── INPUT EMAIL ───────────────────────────────────────────
                 TextFormField(
                   controller: _emailController,
@@ -227,6 +259,20 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                   decoration: _inputDecoration(
                     hint: 'Email',
                     icon: Icons.email_outlined,
+                  ),
+                ),
+
+                const SizedBox(height: 12),
+
+                // ── INPUT Number ───────────────────────────────────────────
+                TextFormField(
+                  controller: _phoneNumber,
+                  keyboardType: TextInputType.number,
+                  textInputAction: TextInputAction.next,
+                  enabled: !state.isLoading,
+                  decoration: _inputDecoration(
+                    hint: 'Nomor telepon',
+                    icon: Icons.people,
                   ),
                 ),
 

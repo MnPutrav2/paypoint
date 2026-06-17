@@ -15,7 +15,7 @@ final authRepositoryProvider = Provider<AuthRepository>(
 class AuthRepository {
   final _dio = Dio(
     BaseOptions(
-      baseUrl: 'https://dev-kasir.kavi.co.id/backend',
+      baseUrl: 'http://localhost:8080/backend',
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 15),
       headers: {'Content-Type': 'application/json'},
@@ -75,7 +75,7 @@ class AuthRepository {
     try {
       final response = await _dio.post(
         '/auth/register',
-        data: request.toJson(),
+        data: request.toFormData(),
       );
       return RegisterResponse.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {

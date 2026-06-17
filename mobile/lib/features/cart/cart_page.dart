@@ -160,7 +160,6 @@ class _CartPageState extends State<CartPage> {
                       _buildCartItems(),
                       const SizedBox(height: 10),
                       if (cartItems.isNotEmpty) ...[
-                        _buildPromoInput(),
                         const SizedBox(height: 10),
                         _buildSummary(),
                       ],
@@ -322,66 +321,6 @@ class _CartPageState extends State<CartPage> {
           Text(
             'Belum ada produk yang ditambahkan',
             style: AppTextStyles.caption,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPromoInput() {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: AppColors.backgroundCard,
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: AppColors.background,
-                borderRadius: BorderRadius.circular(9),
-                border: Border.all(color: const Color(0xFFE2E8F0)),
-              ),
-              child: TextField(
-                style: AppTextStyles.body.copyWith(fontSize: 12),
-                decoration: InputDecoration(
-                  hintText: 'Kode promo...',
-                  hintStyle: AppTextStyles.caption,
-                  border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 10,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          Container(
-            height: 40,
-            padding: const EdgeInsets.symmetric(horizontal: 14),
-            decoration: BoxDecoration(
-              color: AppColors.primary,
-              borderRadius: BorderRadius.circular(9),
-            ),
-            child: Center(
-              child: Text(
-                'Pakai',
-                style: AppTextStyles.label.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
           ),
         ],
       ),

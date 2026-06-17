@@ -1,5 +1,7 @@
 // lib/presentation/providers/register_provider.dart
 
+import 'dart:io';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import '../../data/models/auth_model.dart';
@@ -21,6 +23,7 @@ class RegisterState {
     bool? isLoading,
     String? errorMessage,
     bool? isSuccess,
+    File? selectedImage,
   }) {
     return RegisterState(
       isLoading: isLoading ?? this.isLoading,
@@ -37,15 +40,22 @@ class RegisterNotifier extends StateNotifier<RegisterState> {
   RegisterNotifier(this._repo) : super(const RegisterState());
 
   Future<void> register({
+    required String username,
+    required String name,
+    required String phoneNumber,
     required String email,
     required String password,
     required String confirmPassword,
+    final File? selectedImage,
   }) async {
     state = state.copyWith(isLoading: true);
 
     try {
       await _repo.register(
         RegisterRequest(
+          username: username,
+          name: name,
+          phoneNumber: phoneNumber,
           email: email,
           password: password,
           confirmPassword: confirmPassword,

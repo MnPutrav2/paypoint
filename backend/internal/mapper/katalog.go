@@ -4,6 +4,7 @@ import (
 	katalogModel "kavi-kasir/internal/model/katalog"
 	kategoriModel "kavi-kasir/internal/model/kategori"
 	produkModel "kavi-kasir/internal/model/produk"
+	"kavi-kasir/pkg/minio"
 
 	"github.com/google/uuid"
 )
@@ -26,7 +27,7 @@ func MappingKatalogAll(req []katalogModel.Katalog) []katalogModel.KatalogShow {
 				ID:     v.Produk.ID,
 				Nama:   v.Produk.Nama,
 				Detail: v.Produk.Detail,
-				Foto:   v.Produk.Foto,
+				Foto:   minio.GetPublicURL(v.Produk.Foto),
 				Harga:  v.Produk.Harga,
 				Kategori: &kategoriModel.KategoriShow{
 					ID:        v.Produk.Kategori.ID,
@@ -52,7 +53,7 @@ func MappingKatalog(v katalogModel.Katalog) katalogModel.KatalogShow {
 			ID:     v.Produk.ID,
 			Nama:   v.Produk.Nama,
 			Detail: v.Produk.Detail,
-			Foto:   v.Produk.Foto,
+			Foto:   minio.GetPublicURL(v.Produk.Foto),
 			Harga:  v.Produk.Harga,
 			Kategori: &kategoriModel.KategoriShow{
 				ID:        v.Produk.Kategori.ID,

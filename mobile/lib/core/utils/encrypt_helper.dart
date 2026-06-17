@@ -5,7 +5,7 @@ import 'package:pointycastle/export.dart';
 
 class EncryptHelper {
   // Harus sama dengan KEY di .env Next.js
-  static const _secret = 'PkFNzh9gApR8Nke7EWDTtg0I+J0qnfb/b2QwS/d7yi8=';
+  static const _secret = 'NKOzYfsvcXpuvEh/pfXRi8sVuiENJkkkarLB336c9Pw=';
 
   static const _ivLength = 12;
   static const _tagLength = 16;
